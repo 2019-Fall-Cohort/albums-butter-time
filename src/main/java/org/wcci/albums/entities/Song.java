@@ -19,20 +19,22 @@ public class Song {
 	private String title;
 	private String link;
 	private int duration;
-
 	@JsonIgnore
 	@ManyToOne
 	private Album album;
-	
 	@ManyToMany
 	private List<Tag> tags;
-	
 	@ManyToMany
 	private List<Rating> ratings;
 
 	protected Song() {
 	}
 
+//	Dummy constructor for front-end testing
+	public Song(String title) {
+		this.title = title;
+	}
+	
 	public Song(String title, int duration, Album album) {
 		this.duration = duration;
 		this.title = title;
@@ -63,6 +65,22 @@ public class Song {
 		this.tags.add(tag);
 	}
 	
+	public void updateTitle(String title) {
+		this.title = title;
+	}
+	
+	public void updateDuration(int duration) {
+		this.duration = duration;
+	}
+	
+
+	
+	@Override
+	public String toString() {
+		return "Song [id=" + id + ", title=" + title + ", link=" + link + ", duration=" + duration + ", album=" + album
+				+ ", tags=" + tags + ", ratings=" + ratings + "]";
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

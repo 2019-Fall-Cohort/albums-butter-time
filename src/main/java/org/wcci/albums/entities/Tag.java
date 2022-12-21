@@ -2,12 +2,13 @@ package org.wcci.albums.entities;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
-import net.minidev.json.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Tag {
@@ -18,11 +19,11 @@ public class Tag {
 	private String name;
 	
 	@JsonIgnore
-	@ManyToMany(mappedBy="tags")
+	@ManyToMany(mappedBy="tags", cascade = CascadeType.ALL)
 	private List<Song> songList;
-	@ManyToMany(mappedBy="tags")
+	@ManyToMany(mappedBy="tags", cascade = CascadeType.ALL)
 	private List<Album> albumList;
-	@ManyToMany(mappedBy="tags")
+	@ManyToMany(mappedBy="tags", cascade = CascadeType.ALL)
 	private List<Artist> artistList;
 
 	public Tag() {}

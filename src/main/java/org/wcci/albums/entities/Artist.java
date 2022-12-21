@@ -3,11 +3,14 @@ package org.wcci.albums.entities;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Artist {
@@ -19,8 +22,7 @@ public class Artist {
 	private LocalDate dateOfBirth;
 	private String recordLabel;
 	private String hometown;
-	
-	@OneToMany(mappedBy="artist")
+	@OneToMany(mappedBy="artist", cascade = CascadeType.ALL)
 	private List<Album> albums;
 	
 	@ManyToMany
@@ -39,8 +41,6 @@ public class Artist {
 	public Long getId() {
 		return id;
 	}
-
-	
 	
 	public LocalDate getDateOfBirth() {
 		return dateOfBirth;
@@ -60,6 +60,22 @@ public class Artist {
 
 	public void addTag(Tag tag) {
 		this.tags.add(tag);
+	}
+	
+	public void updateArtistName(String name) {
+		this.name = name;
+	}
+	
+	public void updateArtistDob(LocalDate dob) {
+		this.dateOfBirth= dob;
+	}
+	
+	public void updateArtistHometown(String hometown) {
+		this.hometown= hometown; 
+	}
+	
+	public void updateArtistRecordLabel(String recordLabel) {
+		this.recordLabel= recordLabel; 
 	}
 	
 	@Override
@@ -92,6 +108,5 @@ public class Artist {
 			return false;
 		return true;
 	}
-	
-	
+
 }

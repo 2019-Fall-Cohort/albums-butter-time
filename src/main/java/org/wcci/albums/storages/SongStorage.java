@@ -1,18 +1,23 @@
 package org.wcci.albums.storages;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
+import org.wcci.albums.entities.Album;
 import org.wcci.albums.entities.Song;
+import org.wcci.albums.exception.SongNotFound;
 import org.wcci.albums.repositories.SongRepository;
 
-@Repository
+import java.util.List;
+import java.util.Optional;
+
+@Service
 public class SongStorage {
 
 	@Autowired
 	private SongRepository songRepo;
 	
-	public void addSong(Song song) {
-		songRepo.save(song);		
+	public Song addSong(Song song) {
+		return songRepo.save(song);		
 	}
 	
 	public void removeSong(Song song) {
@@ -20,13 +25,37 @@ public class SongStorage {
 	}
 
 	public Iterable<Song> findAllSongs() {
-		return songRepo.findAll();
+		return songRepo.findAllByOrderByIdDesc();
 	}
 
 	public Song findSongById(Long id) {
-		Song song = songRepo.findById(id).get();
+		Optional<Song> song = songRepo.findById(id); 
+		if(!song.isPresent()) {
+			throw new SongNotFound("Song not found");
+		}
+		
+		return song.get();
+	}
+
+	public void removeSongsByAlbum(Album album) {
+		List<Song> selectedSongs = (List<Song>) findAllSongsByAlbum(album);
+		
+		for (Song song : selectedSongs) {
+			songRepo.delete(song);
+		}
+		
+	}
+
+	private Iterable<Song> findAllSongsByAlbum(Album album) {
+		return songRepo.findAllByAlbum(album);
+	}
+
+	public Song updateSongAll(Song song, int duration, String title) {
+		song.updateDuration(duration);
+		song.updateTitle(title);
+		songRepo.save(song);
 		return song;
 	}
-		
-	
+
+
 }

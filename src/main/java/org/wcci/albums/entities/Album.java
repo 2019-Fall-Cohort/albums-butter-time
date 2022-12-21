@@ -1,9 +1,9 @@
 package org.wcci.albums.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.ElementCollection;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -19,9 +19,9 @@ public class Album {
 	@Id
 	@GeneratedValue
 	private Long id;
-	@OneToMany
+	@OneToMany(mappedBy="album")
 	private List<Song> songList;
-	private int publishYear;
+	private String publishYear;
 	private String title;
 	@JsonIgnore
 	@ManyToOne
@@ -30,14 +30,15 @@ public class Album {
 	private List<Rating> ratings;
 	@ManyToMany
 	private List<Tag> tags;
-//	@ElementCollection
-//	private List<Comment> comments;
+	@ElementCollection
+	private List<Comment> comments;
 
 	protected Album () {}
 	
 	public Album(String title, Artist artist) {
 		this.title = title;
 		this.artist = artist;
+		this.songList = new ArrayList<Song>();
 	}
 	
 	public String getTitle() {
@@ -55,7 +56,7 @@ public class Album {
 		return songList;
 	}
 
-	public int getPublishYear() {
+	public String getPublishYear() {
 		return publishYear;
 	}
 	
@@ -67,9 +68,9 @@ public class Album {
 		return tags;
 	}
 
-//	public List<Comment> getComments() {
-//		return comments;
-//	}
+	public List<Comment> getComments() {
+		return comments;
+	}
 
 	public void addTag(Tag tag) {
 		this.tags.add(tag);
@@ -79,6 +80,14 @@ public class Album {
 		this.ratings.add(rating);
 	}
 	
+	
+	
+	@Override
+	public String toString() {
+		return "Album [id=" + id + ", songList=" + songList + ", publishYear=" + publishYear + ", title=" + title
+				+ ", artist=" + artist + ", ratings=" + ratings + ", tags=" + tags + ", comments=" + comments + "]";
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -116,8 +125,19 @@ public class Album {
 		return true;
 	}
 
-//	public void addComment(Comment comment) {
-//		comments.add(comment);
-//	}
+
+	public void addComment(Comment comment) {
+		comments.add(comment);
+	}
+
+	public void updateYear(String year) {
+		this.publishYear = year;
+		
+	}
+
+	public void updateTitle(String title) {
+		this.title = title;
+		
+	}
 	
 }
